@@ -1,0 +1,77 @@
+.archipelago {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.isle {
+  --k: 1;
+  position: absolute;
+  width: calc(var(--w) * var(--k) * 1px);
+  aspect-ratio: 1.3;
+  translate: -50% -50%;
+  /* soft, sun-faded palette so these read as distant scenery next to the type islands */
+  --ring: #f7e6b0;
+  --inner: #b4dd9a;
+}
+
+.isle[data-kind="sand"] {
+  --ring: #f9eab8;
+  --inner: #f0d792;
+}
+
+.isle[data-kind="rock"] {
+  --ring: #dde2ea;
+  --inner: #b3bccb;
+}
+
+.isle[data-kind="volcano"] {
+  --ring: #ecd0b6;
+  --inner: #cf9679;
+}
+
+.foam,
+.land {
+  position: absolute;
+  inset: 0;
+}
+
+/* pale shallows with a foamy edge */
+.foam {
+  border: 8px solid rgb(255 255 255 / 0.5);
+  border-radius: var(--foam-shape);
+  background: var(--ring);
+  filter: drop-shadow(0 8px 0 rgb(10 80 140 / 0.16));
+  animation: swell 7s ease-in-out calc(var(--i) * -1.3s) infinite;
+}
+
+/* the island itself */
+.land {
+  inset: 16% 13%;
+  border-radius: var(--land-shape);
+  background: var(--inner);
+  box-shadow: inset 0 -6px 0 rgb(0 0 0 / 0.07);
+}
+
+.decor {
+  position: absolute;
+  translate: -50% -50%;
+  font-size: calc(var(--s) * var(--k) * 1rem);
+  line-height: 1;
+  filter: drop-shadow(0 3px 0 rgb(0 0 0 / 0.14));
+}
+
+@keyframes swell {
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+@media (max-width: 900px) {
+  .isle {
+    --k: 0.55;
+    opacity: 0.85;
+  }
+}
