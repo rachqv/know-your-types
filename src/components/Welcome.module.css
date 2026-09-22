@@ -1,0 +1,67 @@
+.welcome {
+  display: grid;
+  gap: 12px;
+  padding: 22px;
+}
+
+.kicker {
+  justify-self: start;
+  padding: 3px 10px 2px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--sun);
+  font-family: var(--font-pixel);
+  font-size: 0.8rem;
+}
+
+.welcome h2 {
+  font-size: 1.9rem;
+}
+
+.lesson {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+}
+
+.lessonNote {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stats div {
+  padding: 10px 14px;
+  border: var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.stats dt {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.stats dd {
+  font-family: var(--font-pixel);
+  font-size: 1.5rem;
+}
+
+.reset {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  text-decoration: underline;
+}

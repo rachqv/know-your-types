@@ -1,0 +1,142 @@
+.pop {
+  animation: pop 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+
+.intro {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  background: var(--surface-2);
+}
+
+.intro h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 1.3rem;
+}
+
+.mascotNote {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.mascots {
+  display: flex;
+  gap: 0;
+}
+
+.mascots > * + * {
+  margin-left: -16px;
+}
+
+/* attacking: three columns */
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.group {
+  padding: 20px;
+}
+
+.group h4 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+}
+
+/* defending: one row per multiplier */
+
+.rows {
+  display: grid;
+  gap: 10px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+}
+
+.rowLabel {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.rowLabel > span {
+  line-height: 1.2;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.badges li {
+  animation: pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+  animation-delay: calc(var(--i) * 40ms + 100ms);
+}
+
+.empty {
+  color: var(--ink-soft);
+}
+
+.footnote {
+  margin-top: 12px;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 560px) {
+  .intro {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .intro h3 {
+    justify-content: center;
+  }
+
+  .group h4 {
+    flex-direction: row;
+    align-items: center;
+  }
+}

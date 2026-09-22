@@ -1,0 +1,218 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 330px) auto;
+  justify-content: center;
+  align-items: start;
+  gap: 28px;
+}
+
+.side {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 58px;
+  padding: 10px 14px;
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.captionHint {
+  color: var(--ink-soft);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--line);
+  border-radius: 5px;
+}
+
+.swatch[data-m="2"],
+.cell[data-m="2"] {
+  --cell: var(--m2);
+  --cell-ink: #fff;
+}
+
+.swatch[data-m="0.5"],
+.cell[data-m="0.5"] {
+  --cell: var(--mh);
+  --cell-ink: #fff;
+}
+
+.swatch[data-m="0"],
+.cell[data-m="0"] {
+  --cell: var(--m0);
+  --cell-ink: #fff;
+}
+
+.swatch[data-m="1"],
+.cell[data-m="1"] {
+  --cell: transparent;
+  --cell-ink: var(--ink);
+}
+
+.swatch {
+  background: var(--cell);
+}
+
+.scroller {
+  /* 19 rows (header + 18 types) sized so the whole chart fits the window height */
+  --sz: clamp(24px, calc((100vh - 150px) / 19 - 3px), 44px);
+  overflow-x: auto;
+  padding: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.grid {
+  border-collapse: separate;
+  border-spacing: 3px;
+  margin-inline: auto;
+}
+
+.grid th,
+.grid td {
+  text-align: center;
+  padding: 0;
+}
+
+.corner {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  min-width: 78px;
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  text-align: left !important;
+  padding-left: 6px !important;
+}
+
+.corner span {
+  display: block;
+}
+
+.colHead,
+.rowHead {
+  border-radius: 8px;
+  background: var(--type-color);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+
+.colHead {
+  height: var(--sz);
+  min-width: var(--sz);
+  font-size: calc(var(--sz) * 0.52);
+}
+
+.rowHead {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 78px;
+  height: var(--sz);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--type-ink);
+  text-align: left !important;
+  box-shadow: 0 0 0 3px var(--surface);
+}
+
+.rowInner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 8px;
+}
+
+.rowName {
+  display: none;
+}
+
+.hi {
+  outline: 3px solid var(--line);
+  outline-offset: 1px;
+}
+
+.cell {
+  width: var(--sz);
+  height: var(--sz);
+  border-radius: 8px;
+  background: var(--cell);
+  color: var(--cell-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(var(--sz) * 0.44);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.cell[data-m="1"] {
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+.cross[data-m="1"] {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.cross:not([data-m="1"]) {
+  filter: brightness(1.12);
+}
+
+.on {
+  position: relative;
+  z-index: 1;
+  transform: scale(1.35);
+  outline: 3px solid var(--line);
+  box-shadow: 0 3px 0 var(--line);
+}
+
+@media (min-width: 900px) {
+  .rowName {
+    display: inline;
+  }
+
+  .rowHead,
+  .corner {
+    min-width: 104px;
+  }
+}
+
+/* narrow screens: stack, and let the chart scroll sideways instead of shrinking */
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .scroller {
+    --sz: 34px;
+  }
+}

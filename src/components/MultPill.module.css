@@ -1,0 +1,27 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.25em 0.8em;
+  border-radius: 999px;
+  border: 3px solid var(--line);
+  background: var(--tone);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.pill strong {
+  font-weight: 700;
+}
+
+.md {
+  font-size: 1rem;
+}
+
+.lg {
+  font-size: 1.4rem;
+  padding: 0.3em 0.9em;
+}

@@ -1,0 +1,26 @@
+.toggle {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: var(--border);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--shadow-sm);
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+
+.toggle[aria-pressed="false"] {
+  background: var(--surface);
+}
+
+.toggle:hover {
+  transform: translateY(-2px) rotate(-6deg);
+}
+
+.toggle:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--line);
+}

@@ -1,0 +1,53 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+  align-items: start;
+  gap: 28px;
+}
+
+.controls {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.famous {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.famousLabel {
+  width: 100%;
+  font-weight: 800;
+}
+
+.famousBtn {
+  padding: 0.3em 0.9em;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 0 var(--ink);
+}
+
+.picker {
+  padding: 14px;
+  border: var(--border);
+  border-radius: var(--radius);
+  background: rgb(255 253 244 / 0.55);
+}
+
+.hint {
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.result {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+}

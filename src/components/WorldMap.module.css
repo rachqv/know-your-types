@@ -1,0 +1,346 @@
+.layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 540px) minmax(0, 430px);
+  justify-content: center;
+  align-items: start;
+  gap: 40px;
+  padding: 24px 16px 72px;
+}
+
+.mapCol {
+  position: relative;
+  z-index: 1; /* above the background islands */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.map {
+  position: relative;
+  width: 100%;
+}
+
+/* ---------- scenery ---------- */
+
+.scenery {
+  position: absolute;
+  translate: -50% -50%;
+  line-height: 1;
+  opacity: 0.95;
+  animation: bob 5s ease-in-out calc(var(--i) * -0.7s) infinite;
+  pointer-events: none;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(-5px) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(5px) rotate(3deg);
+  }
+}
+
+.island {
+  position: absolute;
+  z-index: 0;
+  translate: -50% -46%;
+  width: 42%;
+  aspect-ratio: 1.15;
+  border: 9px solid rgb(255 255 255 / 0.62);
+  background: color-mix(in srgb, var(--type-color) 42%, #fff);
+  filter: drop-shadow(0 8px 0 rgb(10 80 140 / 0.22));
+  pointer-events: none;
+}
+
+.island[data-locked="true"] {
+  filter: grayscale(0.85) drop-shadow(0 8px 0 rgb(10 80 140 / 0.22));
+  opacity: 0.8;
+}
+
+.path {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.sand,
+.dashes {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.sand {
+  stroke: #ffefb0;
+  stroke-width: 22;
+  opacity: 0.95;
+}
+
+.dashes {
+  stroke: #c99a3a;
+  stroke-width: 4;
+  stroke-dasharray: 1 11;
+}
+
+/* the not-yet-unlocked stretch of the trail fades into the mist */
+.lockedPath {
+  opacity: 0.55;
+}
+
+.lockedPath .sand {
+  stroke: #e4e8ee;
+}
+
+.lockedPath .dashes {
+  stroke: #8f9ab0;
+}
+
+/* ---------- nodes ---------- */
+
+.node {
+  position: absolute;
+  z-index: 3;
+  translate: -50% -50%;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.medal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 78px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 26%, rgb(255 255 255 / 0.65), transparent 55%),
+    var(--type-color);
+  box-shadow: 0 5px 0 rgb(27 35 64 / 0.9);
+  font-size: 2.1rem;
+  line-height: 1;
+  transition: transform 0.22s cubic-bezier(0.3, 1.7, 0.5, 1), filter 0.2s;
+}
+
+.node[data-state="new"] .medal {
+  border-style: dashed;
+  filter: saturate(0.6) brightness(1.06);
+}
+
+.node:hover .medal {
+  transform: translateY(-4px) scale(1.07);
+  filter: none;
+}
+
+.node[data-selected="true"] .medal {
+  transform: translateY(-6px) scale(1.15);
+  filter: none;
+  outline: 4px solid var(--sun);
+  outline-offset: 3px;
+}
+
+/* locked: a grey padlock medal */
+.node[data-state="locked"] {
+  cursor: not-allowed;
+}
+
+.node[data-state="locked"] .medal {
+  border-style: dashed;
+  background: #d3d9e4;
+  box-shadow: 0 5px 0 rgb(27 35 64 / 0.4);
+  font-size: 1.7rem;
+  filter: none;
+}
+
+.node[data-state="locked"]:hover .medal {
+  transform: none;
+}
+
+.node[data-state="locked"] .label {
+  background: rgb(27 35 64 / 0.5);
+}
+
+.node[data-nudge="true"] .medal {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  20% {
+    transform: translateX(-7px);
+  }
+  50% {
+    transform: translateX(7px);
+  }
+  80% {
+    transform: translateX(-4px);
+  }
+}
+
+.label {
+  padding: 0.15em 0.75em 0.2em;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.node[data-state="new"] .label {
+  background: rgb(27 35 64 / 0.72);
+}
+
+.star {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  font-size: 1.6rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 0 rgb(27 35 64 / 0.6));
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    transform: scale(1.2) rotate(12deg);
+  }
+}
+
+/* ---------- trainer marker + hint ---------- */
+
+.marker {
+  position: absolute;
+  z-index: 4;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transition:
+    left 0.7s cubic-bezier(0.45, 1.4, 0.5, 1),
+    top 0.7s cubic-bezier(0.45, 1.4, 0.5, 1);
+}
+
+.ball {
+  --s: 34px;
+  position: absolute;
+  translate: -58px -62px;
+  box-shadow: 0 4px 0 rgb(27 35 64 / 0.4);
+  animation: hop 1s ease-in-out infinite;
+}
+
+@keyframes hop {
+  50% {
+    transform: translateY(-9px) rotate(14deg);
+  }
+}
+
+.hint {
+  position: absolute;
+  z-index: 5;
+  translate: -50% -112px;
+  padding: 0.35em 0.9em;
+  border: var(--border);
+  border-radius: 14px;
+  background: var(--paper);
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: hop 1s ease-in-out infinite;
+}
+
+.lockNote {
+  width: max-content;
+  max-width: 210px;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.9rem;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  translate: -50% -118px;
+  animation: none;
+}
+
+.hint::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 14px;
+  height: 14px;
+  translate: -50% 0;
+  rotate: 45deg;
+  border-right: var(--border);
+  border-bottom: var(--border);
+  background: var(--paper);
+}
+
+/* ---------- side panel (desktop) / bottom sheet (mobile) ---------- */
+
+.panelCol {
+  position: sticky;
+  z-index: 1;
+  top: 88px;
+  max-height: calc(100vh - 108px);
+  overflow-y: auto;
+  padding: 4px 4px 12px;
+  scrollbar-width: thin;
+}
+
+.welcomeMobile {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    display: block;
+    padding-inline: 20px;
+  }
+
+  .mapCol {
+    max-width: 520px;
+    margin-inline: auto;
+  }
+
+  .welcomeMobile {
+    display: block;
+  }
+
+  .panelCol {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 66px;
+    z-index: 55;
+    max-height: 54vh;
+    padding: 0 10px;
+    overflow-y: auto;
+    transform: translateY(120%);
+    transition: transform 0.4s cubic-bezier(0.3, 1.2, 0.5, 1);
+    pointer-events: none;
+  }
+
+  .panelCol[data-open="true"] {
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .medal {
+    width: 66px;
+    height: 66px;
+    font-size: 1.8rem;
+  }
+}
