@@ -1,0 +1,426 @@
+.round {
+  display: grid;
+  gap: 12px;
+}
+
+/* ---------- status bar ---------- */
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.count {
+  padding: 3px 9px 2px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--sun);
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+}
+
+.streak {
+  padding: 0.1em 0.8em;
+  border: var(--border);
+  border-radius: 999px;
+  background: var(--paper-2);
+  font-weight: 800;
+  transition: background 0.2s;
+}
+
+.streak[data-hot="true"] {
+  background: var(--sun);
+}
+
+/* ---------- battle scene ---------- */
+
+.scene {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(to bottom, transparent 0 56%, rgb(255 255 255 / 0.18) 56% 57%, transparent 57%),
+    linear-gradient(to bottom, #c5ecff 0 56%, #93d67f 56%);
+}
+
+.foePad,
+.mePad {
+  position: absolute;
+  width: clamp(120px, 34vw, 200px);
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 35%, #b9e9a4, #83c96d);
+  box-shadow: inset 0 -5px 0 rgb(0 0 0 / 0.12), 0 4px 0 rgb(0 0 0 / 0.08);
+}
+
+.foePad {
+  right: 6%;
+  top: 40%;
+}
+
+.mePad {
+  left: 5%;
+  bottom: 6px;
+}
+
+.foe,
+.me {
+  position: absolute;
+}
+
+.foe {
+  right: 9%;
+  top: 10px;
+}
+
+.me {
+  left: 8%;
+  bottom: 10px;
+  animation: sendOut 0.55s cubic-bezier(0.3, 1.5, 0.5, 1) 0.1s both;
+}
+
+@keyframes sendOut {
+  from {
+    opacity: 0;
+    transform: translate(-40px, 20px) scale(0.2);
+  }
+}
+
+/* taking a hit: flash and shake */
+.foe[data-hit="true"] {
+  animation: hit 0.5s 0.85s;
+}
+
+.me[data-hit="true"] {
+  animation: sendOut 0.55s cubic-bezier(0.3, 1.5, 0.5, 1) 0.1s both, hit 0.5s 1.75s;
+}
+
+@keyframes hit {
+  0%,
+  100% {
+    transform: translateX(0);
+    filter: none;
+  }
+  20% {
+    transform: translateX(-9px);
+    filter: brightness(2.2);
+  }
+  40% {
+    transform: translateX(9px);
+  }
+  60% {
+    transform: translateX(-6px);
+    filter: brightness(1.6);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+/* an empty HP bar means the Pokémon faints */
+.foe[data-faint="true"] {
+  animation: hit 0.5s 0.85s, faint 0.6s 1.4s both;
+}
+
+.me[data-faint="true"] {
+  animation: sendOut 0.55s cubic-bezier(0.3, 1.5, 0.5, 1) 0.1s both, hit 0.5s 1.75s, faint 0.6s 2.3s both;
+}
+
+@keyframes faint {
+  to {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.waiting {
+  --s: 34px;
+  position: absolute;
+  left: calc(5% + 80px);
+  bottom: 34px;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  50% {
+    transform: translateY(-12px) rotate(20deg);
+  }
+}
+
+/* the multiplier that pops up when a hit lands */
+.pop {
+  position: absolute;
+  z-index: 3;
+  animation: popIn 0.6s cubic-bezier(0.3, 1.7, 0.5, 1) both;
+}
+
+.foePop {
+  right: 30%;
+  top: 30%;
+}
+
+.mePop {
+  left: 30%;
+  bottom: 38%;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.3) translateY(10px);
+  }
+}
+
+/* ---------- name plates ---------- */
+
+.plate {
+  position: absolute;
+  z-index: 2;
+  width: min(230px, 54%);
+  padding: 7px 10px 8px;
+  border: var(--border);
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: 0 3px 0 rgb(27 35 64 / 0.3);
+}
+
+.foePlate {
+  top: 12px;
+  left: 12px;
+}
+
+.mePlate {
+  right: 12px;
+  bottom: 12px;
+  animation: popIn 0.4s cubic-bezier(0.3, 1.5, 0.5, 1) 0.15s both;
+}
+
+.nameRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.nameRow strong {
+  font-size: 1.05rem;
+}
+
+.lv {
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.types {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin: 4px 0 6px;
+}
+
+.plate .types {
+  justify-content: flex-start;
+}
+
+.hpRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hpLabel {
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+}
+
+.hp {
+  flex: 1;
+  height: 11px;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: #e3e8f0;
+}
+
+.hp i {
+  display: block;
+  height: 100%;
+  background: #3fc26f;
+  transition: width 0.8s ease-out, background 0.3s;
+}
+
+.hp[data-level="warn"] i {
+  background: #f5b82e;
+}
+
+.hp[data-level="low"] i {
+  background: #ee5a4f;
+}
+
+/* ---------- dialogue box ---------- */
+
+.textbox {
+  min-height: 118px;
+  padding: 12px 16px;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 3px #fff, 0 4px 0 rgb(27 35 64 / 0.25);
+}
+
+.lines {
+  display: grid;
+  gap: 5px;
+  font-weight: 700;
+}
+
+.lines > p {
+  animation: lineIn 0.3s both;
+  animation-delay: var(--d, 0s);
+}
+
+.tip {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+@keyframes lineIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 8px 12px;
+  border: var(--border);
+  border-radius: 12px;
+  visibility: hidden;
+  animation: verdictIn 0.3s both;
+  animation-delay: var(--d);
+}
+
+@keyframes verdictIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    visibility: hidden;
+  }
+  to {
+    visibility: visible;
+  }
+}
+
+.verdict[data-correct="true"] {
+  background: color-mix(in srgb, var(--m2) 20%, var(--paper));
+}
+
+.verdict[data-correct="false"] {
+  background: color-mix(in srgb, var(--mq) 18%, var(--paper));
+}
+
+.verdict :global(.btn) {
+  flex: none;
+  padding: 0.45em 1.1em;
+}
+
+/* ---------- party menu ---------- */
+
+.party {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.mon {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 4px;
+  padding: 8px 6px 10px;
+  border: var(--border);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: 0 3px 0 rgb(27 35 64 / 0.85);
+  text-align: center;
+  transition: transform 0.15s, background 0.15s, opacity 0.2s;
+}
+
+.mon:not(:disabled):hover {
+  transform: translateY(-4px);
+  background: var(--paper-2);
+}
+
+.mon:disabled {
+  cursor: default;
+}
+
+.monName {
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.calc {
+  display: flex;
+  gap: 10px;
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  animation: lineIn 0.3s both;
+}
+
+.mon[data-state="best"] {
+  background: color-mix(in srgb, var(--m2) 22%, var(--paper));
+  outline: 4px solid var(--mint);
+  outline-offset: 1px;
+}
+
+.mon[data-state="wrong"] {
+  background: color-mix(in srgb, var(--mq) 20%, var(--paper));
+  outline: 4px solid var(--coral);
+  outline-offset: 1px;
+  animation: shake 0.35s;
+}
+
+.mon[data-state="dim"] {
+  opacity: 0.55;
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+@media (max-width: 560px) {
+  .scene {
+    height: 230px;
+  }
+
+  .verdict {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .party {
+    gap: 6px;
+  }
+
+  .monName {
+    font-size: 0.9rem;
+  }
+}

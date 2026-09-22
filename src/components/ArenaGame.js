@@ -2,39 +2,39 @@
 
 import { useState } from "react";
 import { progress } from "@/lib/progress";
-import { buildRound } from "@/lib/quiz";
+import { buildBattles } from "@/lib/battle";
 import { sfx } from "@/lib/sfx";
 import { celebrate } from "@/lib/celebrate";
 import PageTitle from "./PageTitle";
-import QuizRound from "./QuizRound";
+import BattleRound from "./BattleRound";
+import PokemonArt from "./PokemonArt";
 import TypeBadge from "./TypeBadge";
-import MultPill from "./MultPill";
 import styles from "./ArenaGame.module.css";
 
-const ROUND_LENGTH = 10;
+const BATTLES = 6;
 
 function verdict(score) {
-  if (score === ROUND_LENGTH) return { emoji: "🏆", text: "Perfect! You're a type master." };
-  if (score >= 8) return { emoji: "🌟", text: "Great work, trainer! Almost flawless." };
-  if (score >= 5) return { emoji: "👍", text: "Solid! A few more rounds and you'll have it." };
+  if (score === BATTLES) return { emoji: "🏆", text: "Flawless! You're a battle master." };
+  if (score >= BATTLES - 1) return { emoji: "🌟", text: "Great work, trainer! Almost perfect." };
+  if (score >= BATTLES / 2) return { emoji: "👍", text: "Solid! A few more battles and you'll have it." };
   return { emoji: "🌱", text: "Everyone starts somewhere. Explore the map and try again!" };
 }
 
 export default function ArenaGame() {
   const [phase, setPhase] = useState("idle"); // idle | playing | done
-  const [questions, setQuestions] = useState([]);
+  const [battles, setBattles] = useState([]);
   const [result, setResult] = useState(null);
   const [round, setRound] = useState(0);
 
   function start() {
     setRound((r) => r + 1);
-    setQuestions(buildRound({ count: ROUND_LENGTH }));
+    setBattles(buildBattles(BATTLES));
     setResult(null);
     setPhase("playing");
   }
 
   function finish(r) {
-    if (r.score >= 8) {
+    if (r.score >= BATTLES - 1) {
       sfx.fanfare();
       celebrate();
     }
@@ -44,26 +44,41 @@ export default function ArenaGame() {
 
   return (
     <main className="page">
-      <PageTitle emoji="⚔️" title="The Arena">
-        Ten quick battles. Trust your gut. Every right answer earns 5 XP.
-      </PageTitle>
+      {phase !== "playing" && (
+        <div className={styles.title}>
+          <PageTitle emoji="⚔️" title="The Arena">
+            Your rival sends out a Pokémon. Pick the best partner from your team. Every win earns 5
+            XP.
+          </PageTitle>
+        </div>
+      )}
 
       <div className={`card ${styles.board}`}>
         {phase === "idle" && (
           <div className={styles.center}>
             <p className={styles.bigEmoji} aria-hidden="true">🎯</p>
-            <h2>Ready, trainer?</h2>
-            <p>Each question shows a move hitting a Pokémon. How much damage does it do?</p>
+            <h2>Ready to battle?</h2>
+            <ol className={styles.steps}>
+              <li>
+                <span>1</span> Your rival sends out a Pokémon. Check its types!
+              </li>
+              <li>
+                <span>2</span> Pick who to send out from your party of three.
+              </li>
+              <li>
+                <span>3</span> Watch the battle. The best pick hits hard and takes little damage.
+              </li>
+            </ol>
             <button className="btn coral" onClick={start}>
-              Start round
+              Start battle
             </button>
           </div>
         )}
 
         {phase === "playing" && (
-          <QuizRound
+          <BattleRound
             key={round}
-            questions={questions}
+            battles={battles}
             onAnswer={(ok) => ok && progress.addXp(5)}
             onFinish={finish}
           />
@@ -73,7 +88,7 @@ export default function ArenaGame() {
           <div className={styles.center}>
             <p className={styles.bigEmoji} aria-hidden="true">{verdict(result.score).emoji}</p>
             <h2 className={styles.score}>
-              {result.score}/{ROUND_LENGTH}
+              {result.score}/{BATTLES}
             </h2>
             <p>{verdict(result.score).text}</p>
 
@@ -82,11 +97,22 @@ export default function ArenaGame() {
                 <h3>Worth remembering</h3>
                 <ul>
                   {result.misses.map((m) => (
-                    <li key={`${m.attacker}-${m.defender}`}>
-                      <TypeBadge id={m.attacker} size="sm" />
+                    <li key={m.foe.dex}>
+                      <div className={styles.reviewMon}>
+                        <PokemonArt pokemon={m.foe} size={44} />
+                        <span>
+                          <strong>{m.foe.name}</strong>
+                          <span className={styles.reviewTypes}>
+                            {m.foe.types.map((t) => (
+                              <TypeBadge key={t} id={t} size="sm" />
+                            ))}
+                          </span>
+                        </span>
+                      </div>
                       <span aria-hidden="true">→</span>
-                      <TypeBadge id={m.defender} size="sm" />
-                      <MultPill value={m.answer} />
+                      <span className={styles.reviewBetter}>
+                        Best pick: <strong>{m.best.name}</strong>
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -94,7 +120,7 @@ export default function ArenaGame() {
             )}
 
             <button className="btn coral" onClick={start}>
-              Play again
+              Battle again
             </button>
           </div>
         )}

@@ -80,6 +80,26 @@ export const sfx = {
     );
   },
 
+  /** A Poké Ball opening as your Pokémon is sent out. */
+  send() {
+    tone({ freq: 500, to: 900, dur: 0.09, type: "triangle", gain: 0.14 });
+    tone({ freq: 900, to: 1400, dur: 0.12, type: "sine", gain: 0.1, delay: 0.08 });
+  },
+
+  /** The sound of a hit: punchy for super effective, soft for resisted, hollow for immune. */
+  hit(mult) {
+    if (mult === 0) {
+      tone({ freq: 160, to: 90, dur: 0.22, type: "sine", gain: 0.1 });
+    } else if (mult < 1) {
+      tone({ freq: 240, to: 190, dur: 0.12, type: "triangle", gain: 0.1 });
+    } else if (mult === 1) {
+      tone({ freq: 320, to: 120, dur: 0.14, type: "square", gain: 0.08 });
+    } else {
+      tone({ freq: 420, to: 100, dur: 0.18, type: "sawtooth", gain: 0.11 });
+      tone({ freq: 1000, to: 300, dur: 0.1, type: "square", gain: 0.06, delay: 0.03 });
+    }
+  },
+
   /** Two dull thuds: "nope, that one's locked". */
   locked() {
     tone({ freq: 190, to: 140, dur: 0.1, type: "square", gain: 0.06 });
