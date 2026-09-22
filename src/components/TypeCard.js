@@ -40,7 +40,7 @@ const TABS = {
   },
 };
 
-export default function TypeCard({ id, onClose, onNext }) {
+export default function TypeCard({ id, onClose, onSelect }) {
   const type = TYPE_BY_ID[id];
   const { badges } = useProgress();
   const hasBadge = badges.includes(id);
@@ -60,7 +60,16 @@ export default function TypeCard({ id, onClose, onNext }) {
       sfx.fanfare();
       celebrate();
     }
-    setGame({ phase: "done", score, passed, misses, unlockedNext: passed && !hasBadge && Boolean(nextId) });
+    // that badge completes the set if it's the only one still missing
+    const champion = passed && !hasBadge && badges.length + 1 === ORDER.length;
+    setGame({
+      phase: "done",
+      score,
+      passed,
+      misses,
+      champion,
+      unlockedNext: passed && !hasBadge && Boolean(nextId),
+    });
   }
 
   const view = TABS[tab];
@@ -114,7 +123,12 @@ export default function TypeCard({ id, onClose, onNext }) {
                       <ul className={styles.badges}>
                         {types.map((t, i) => (
                           <li key={t.id} style={{ "--i": i }}>
-                            <TypeBadge id={t.id} size="sm" />
+                            <TypeBadge
+                              id={t.id}
+                              size="sm"
+                              label={`Go to the ${t.name} island`}
+                              onClick={t.id === id ? undefined : () => onSelect(t.id)}
+                            />
                           </li>
                         ))}
                       </ul>
@@ -168,6 +182,9 @@ export default function TypeCard({ id, onClose, onNext }) {
             {game.unlockedNext && (
               <p className={styles.unlock}>🔓 {TYPE_BY_ID[nextId].name} island unlocked!</p>
             )}
+            {game.champion && (
+              <p className={styles.unlock}>🏆 All 18 badges! You&apos;re a Type Champion!</p>
+            )}
             {game.misses.length > 0 && (
               <ul className={styles.misses}>
                 {game.misses.map((m) => (
@@ -182,7 +199,7 @@ export default function TypeCard({ id, onClose, onNext }) {
             )}
             <div className={styles.resultActions}>
               {game.passed && nextId ? (
-                <button className="btn coral" onClick={() => onNext(nextId)}>
+                <button className="btn coral" onClick={() => onSelect(nextId)}>
                   Next: {TYPE_BY_ID[nextId].name} →
                 </button>
               ) : (

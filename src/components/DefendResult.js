@@ -2,6 +2,7 @@ import { TYPES, TYPE_BY_ID, MULTIPLIERS, multiplierAgainst } from "@/data/types"
 import TypeBadge from "./TypeBadge";
 import MultPill from "./MultPill";
 import Mascot from "./Mascot";
+import PokemonArt from "./PokemonArt";
 import styles from "./Result.module.css";
 
 const ORDER = [4, 2, 0.5, 0.25, 0];
@@ -14,7 +15,8 @@ function summarize(byMult) {
   return `Watch out for ${weak.map((t) => t.name).join(", ")} moves.`;
 }
 
-export default function DefendResult({ ids }) {
+// `pokemon` is optional: when the types came from a specific Pokémon, show it instead of type mascots.
+export default function DefendResult({ ids, pokemon }) {
   const byMult = {};
   for (const t of TYPES) {
     const m = multiplierAgainst(t.id, ids);
@@ -26,21 +28,26 @@ export default function DefendResult({ ids }) {
     <div className={styles.pop}>
       <div className={`card ${styles.intro}`}>
         <div className={styles.mascots}>
-          {ids.map((id) => (
-            <Mascot key={id} typeId={id} size={ids.length > 1 ? 76 : 88} />
-          ))}
+          {pokemon ? (
+            <PokemonArt pokemon={pokemon} size={104} />
+          ) : (
+            ids.map((id) => <Mascot key={id} typeId={id} size={ids.length > 1 ? 76 : 88} />)
+          )}
         </div>
         <div>
           <h3>
+            {pokemon && <span>{pokemon.name}</span>}
             {ids.map((id) => (
               <TypeBadge key={id} id={id} size="lg" />
-            ))}{" "}
-            Pokémon
+            ))}
+            {!pokemon && " Pokémon"}
           </h3>
           <p>{summarize(byMult)}</p>
-          <p className={styles.mascotNote}>
-            Pure-type examples: {ids.map((id) => TYPE_BY_ID[id].mascotName).join(" and ")}
-          </p>
+          {!pokemon && (
+            <p className={styles.mascotNote}>
+              Pure-type examples: {ids.map((id) => TYPE_BY_ID[id].mascotName).join(" and ")}
+            </p>
+          )}
         </div>
       </div>
 

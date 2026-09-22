@@ -216,7 +216,7 @@ export default function WorldMap() {
 
       <div className={styles.panelCol} data-open={selected !== null}>
         {selected ? (
-          <TypeCard key={selected} id={selected} onClose={() => setSelected(null)} onNext={select} />
+          <TypeCard key={selected} id={selected} onClose={() => setSelected(null)} onSelect={select} />
         ) : (
           <Welcome />
         )}

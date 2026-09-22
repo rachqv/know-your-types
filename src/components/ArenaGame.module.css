@@ -74,6 +74,31 @@
   font-size: 0.85rem;
 }
 
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: min(100%, 420px);
+}
+
+.stats div {
+  padding: 8px 10px;
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+}
+
+.stats dt {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.stats dd {
+  font-family: var(--font-pixel);
+  font-size: 1.2rem;
+}
+
 .review {
   width: 100%;
   padding: 14px 16px;

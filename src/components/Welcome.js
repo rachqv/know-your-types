@@ -11,16 +11,31 @@ export default function Welcome({ className = "" }) {
   const { visited, badges } = useProgress();
   const [confirming, setConfirming] = useState(false);
   const started = visited.length > 0;
+  const champion = badges.length === TYPES.length;
 
   return (
     <section className={`card ${styles.welcome} ${className}`}>
-      <p className={styles.kicker}>{started ? "Welcome back!" : "New here?"}</p>
-      <h2>{started ? "Keep exploring, trainer" : "Welcome, trainer!"}</h2>
-      <p>
-        Every Pokémon and every move has a <strong>type</strong>, and types decide who wins a
-        battle. There are just 18. Tap an island to learn a type, then pass its challenge to earn a
-        badge and unlock the next island.
-      </p>
+      {champion ? (
+        <>
+          <p className={styles.kicker}>Champion!</p>
+          <h2>🏆 Type Champion</h2>
+          <p>
+            You&apos;ve earned all {TYPES.length} badges and explored every island. Keep your
+            skills sharp in the <strong>Arena</strong>, or replay any island&apos;s challenge from its
+            card.
+          </p>
+        </>
+      ) : (
+        <>
+          <p className={styles.kicker}>{started ? "Welcome back!" : "New here?"}</p>
+          <h2>{started ? "Keep exploring, trainer" : "Welcome, trainer!"}</h2>
+          <p>
+            Every Pokémon and every move has a <strong>type</strong>, and types decide who wins a
+            battle. There are just 18. Tap an island to learn a type, then pass its challenge to
+            earn a badge and unlock the next island.
+          </p>
+        </>
+      )}
 
       <div className={styles.lesson}>
         <TypeBadge id="fire" size="sm" />

@@ -1,6 +1,7 @@
 import { Bricolage_Grotesque, Silkscreen } from "next/font/google";
 import Hud from "@/components/Hud";
 import FunEffects from "@/components/FunEffects";
+import LevelUpToast from "@/components/LevelUpToast";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
       <body>
         <Hud />
         {children}
+        <LevelUpToast />
         <FunEffects />
       </body>
     </html>

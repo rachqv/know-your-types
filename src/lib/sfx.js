@@ -110,6 +110,13 @@ export const sfx = {
     tone({ freq: 300, to: 120, dur: 0.32, type: "sawtooth", gain: 0.08 });
   },
 
+  levelUp() {
+    [392, 523.25, 659.25, 783.99].forEach((freq, i) =>
+      tone({ freq, dur: 0.16, type: "triangle", gain: 0.13, delay: i * 0.08 }),
+    );
+    tone({ freq: 1046.5, dur: 0.4, type: "sine", gain: 0.1, delay: 0.34 });
+  },
+
   fanfare() {
     [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5].forEach((freq, i) =>
       tone({ freq, dur: 0.22, type: "triangle", gain: 0.16, delay: i * 0.1 }),

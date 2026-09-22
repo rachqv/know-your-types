@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { progress } from "@/lib/progress";
+import { progress, useProgress } from "@/lib/progress";
 import { buildBattles } from "@/lib/battle";
 import { sfx } from "@/lib/sfx";
 import { celebrate } from "@/lib/celebrate";
@@ -25,6 +25,7 @@ export default function ArenaGame() {
   const [battles, setBattles] = useState([]);
   const [result, setResult] = useState(null);
   const [round, setRound] = useState(0);
+  const { arena } = useProgress();
 
   function start() {
     setRound((r) => r + 1);
@@ -34,6 +35,7 @@ export default function ArenaGame() {
   }
 
   function finish(r) {
+    progress.recordArena({ score: r.score, streak: r.bestStreak });
     if (r.score >= BATTLES - 1) {
       sfx.fanfare();
       celebrate();
@@ -69,6 +71,24 @@ export default function ArenaGame() {
                 <span>3</span> Watch the battle. The best pick hits hard and takes little damage.
               </li>
             </ol>
+            {arena.rounds > 0 && (
+              <dl className={styles.stats} aria-label="Your Arena record">
+                <div>
+                  <dt>Best round</dt>
+                  <dd>
+                    {arena.best}/{BATTLES}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Battles won</dt>
+                  <dd>{arena.wins}</dd>
+                </div>
+                <div>
+                  <dt>Best streak</dt>
+                  <dd>🔥 {arena.bestStreak}</dd>
+                </div>
+              </dl>
+            )}
             <button className="btn coral" onClick={start}>
               Start battle
             </button>

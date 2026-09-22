@@ -3,9 +3,11 @@ import { useSyncExternalStore } from "react";
 // Player progress, saved in localStorage.
 //  visited: types whose island the player has opened
 //  badges:  types whose challenge the player has passed
+//  arena:   lifetime Arena stats
 
 const STORAGE_KEY = "kyt-progress-v1";
-const EMPTY = Object.freeze({ visited: [], badges: [], xp: 0 });
+const EMPTY_ARENA = Object.freeze({ best: 0, wins: 0, rounds: 0, bestStreak: 0 });
+const EMPTY = Object.freeze({ visited: [], badges: [], xp: 0, arena: EMPTY_ARENA });
 const LEVEL_TITLES = ["Rookie", "Explorer", "Trainer", "Ace", "Champion", "Master"];
 
 let state = null;
@@ -15,7 +17,12 @@ function load() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved) {
-      return { visited: saved.visited ?? [], badges: saved.badges ?? [], xp: saved.xp ?? 0 };
+      return {
+        visited: saved.visited ?? [],
+        badges: saved.badges ?? [],
+        xp: saved.xp ?? 0,
+        arena: { ...EMPTY_ARENA, ...saved.arena },
+      };
     }
   } catch {}
   return EMPTY;
@@ -32,11 +39,17 @@ function subscribe(cb) {
 }
 
 function commit(next) {
+  const before = levelInfo(getSnapshot().xp).level;
   state = next;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {}
   listeners.forEach((cb) => cb());
+
+  const after = levelInfo(next.xp);
+  if (after.level > before) {
+    window.dispatchEvent(new CustomEvent("kyt:levelup", { detail: after }));
+  }
 }
 
 export const progress = {
@@ -62,6 +75,21 @@ export const progress = {
   addXp(amount) {
     const s = getSnapshot();
     commit({ ...s, xp: s.xp + amount });
+  },
+
+  /** Records a finished Arena round: its score and the longest winning streak in it. */
+  recordArena({ score, streak }) {
+    const s = getSnapshot();
+    const a = s.arena;
+    commit({
+      ...s,
+      arena: {
+        best: Math.max(a.best, score),
+        wins: a.wins + score,
+        rounds: a.rounds + 1,
+        bestStreak: Math.max(a.bestStreak, streak),
+      },
+    });
   },
 
   reset() {
