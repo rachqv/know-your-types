@@ -1,5 +1,8 @@
 # Know Your Types
 
+Try it yourself!
+https://know-your-types-eta.vercel.app/
+
 A playful, beginner-friendly guide to Pokémon type matchups. Instead of a wall of tables, it turns learning the 18 types into a small adventure: explore an island map, earn badges, and battle it out in the arena.
 
 Built with [Next.js](https://nextjs.org) (App Router), React 19, and plain CSS Modules. There are no UI libraries, no backend and no audio files.
